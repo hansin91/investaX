@@ -1,4 +1,17 @@
-import { SET_ERROR, SET_LIMIT, SET_PAGE, SET_LOADING_PHOTOS, SET_PHOTOS, SET_TOTAL_PHOTO, SET_LOAD_MORE, FETCH_MORE } from '../actions/types'
+import {
+  SET_LOADING_MORE,
+  SET_ERROR,
+  SET_LIMIT,
+  SET_PAGE,
+  SET_LOADING_PHOTOS,
+  SET_PHOTOS,
+  SET_TOTAL_PHOTO,
+  SET_LOAD_MORE,
+  FETCH_MORE,
+  SET_DELETED,
+  SET_DELETING,
+  DELETE_PHOTOS_SUCCESS
+} from '../actions/types'
 
 interface IPhoto {
   id: string
@@ -17,6 +30,8 @@ export interface IAppState {
   readonly page: number
   readonly limit: number,
   readonly total: number,
+  readonly deleting: boolean,
+  readonly deleted: boolean
 }
 
 export const initialState: IAppState = {
@@ -27,11 +42,34 @@ export const initialState: IAppState = {
   loadMore: false,
   page: 1,
   limit: 25,
-  total: 0
+  total: 0,
+  deleted: false,
+  deleting: false
 }
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
+    case DELETE_PHOTOS_SUCCESS:
+      const newPhotoList = [...state.photos].filter((photo) => !action.payload[photo.id])
+      return {
+        ...state,
+        photos: newPhotoList
+      }
+    case SET_DELETED:
+      return {
+        ...state,
+        deleted: action.payload
+      }
+    case SET_DELETING:
+      return {
+        ...state,
+        deleting: action.payload
+      }
+    case SET_LOADING_MORE:
+      return {
+        ...state,
+        loadingMore: action.payload
+      }
     case SET_LOAD_MORE:
       return {
         ...state,

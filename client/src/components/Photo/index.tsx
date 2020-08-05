@@ -21,12 +21,6 @@ function Photo({ deleteMode, deletePhotos, photo, checkPhoto }: Props) {
   const [checked, setChecked] = useState(true)
   const handleCheckPhoto = (e: any) => {
     setChecked(true)
-    // const checked = document.getElementsByTagName('input')[0].checked
-    // if (checked) {
-    //   setShow(true)
-    // } else {
-    //   setShow(false)
-    // }
     setShow(true)
     checkPhoto({ photo, checked: true })
   }
@@ -51,7 +45,7 @@ function Photo({ deleteMode, deletePhotos, photo, checkPhoto }: Props) {
       </div>
       <div className="photo-img-container">
         <div className="photo-img-wrapper">
-          <img className="photo-img" src={photo.raw} />
+          <img alt={photo.name} className="photo-img" src={photo.raw} />
         </div>
       </div>
       <div className="text-center photo-info">

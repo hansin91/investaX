@@ -1,4 +1,4 @@
-import { SET_PAGE, SET_PHOTOS, SET_LIMIT, SET_LOADING_PHOTOS, SET_ERROR, SET_TOTAL_PHOTO, SET_LOADING_MORE, FETCH_MORE, SET_LOAD_MORE } from './types'
+import { SET_PAGE, SET_PHOTOS, SET_LIMIT, SET_LOADING_PHOTOS, SET_ERROR, SET_TOTAL_PHOTO, SET_LOADING_MORE, FETCH_MORE, SET_LOAD_MORE, SET_DELETED, SET_DELETING, DELETE_PHOTOS_SUCCESS } from './types'
 import axios from 'axios'
 
 export const setPhotos = (photos: Array<any>) => ({
@@ -46,6 +46,44 @@ export const fetchMore = (photos: any) =>({
   payload: photos
 })
 
+export const setDeleted = (value: boolean) => ({
+  type: SET_DELETED,
+  payload: value
+})
+
+export const setDeleting = (value: boolean) => ({
+  type: SET_DELETING,
+  payload: value
+})
+
+export const deletePhotosSucces = (photos: any) => ({
+  type: DELETE_PHOTOS_SUCCESS,
+  payload: photos
+})
+
+export const deletePhotos = (payload: any) => {
+  const { list, dispatch, checkedPhotos } = payload
+  dispatch(setDeleting(true))
+  const deletePhotos = []
+  for (const key in list) {
+    deletePhotos.push({
+      album: key,
+      documents: list[key].join(", ")
+    })
+  }
+  axios.delete(process.env.REACT_APP_BASE_URL+ '/photos', { data: deletePhotos })
+  .then((response) => {
+    dispatch(setDeleted(true))
+    dispatch(deletePhotosSucces(checkedPhotos))
+  })
+  .catch((err) => {
+    const { response: { data: { message } } } = err
+    dispatch(setErrors(message))
+    dispatch(setDeleted(false))
+  })
+  .finally(() => dispatch(setDeleting(false)))
+}
+
 export const loadPhotos = (payload: any) => {
   const { dispatch, page, limit, isLoadMore } = payload
   const data = {
@@ -64,7 +102,6 @@ export const loadPhotos = (payload: any) => {
       dispatch(fetchMore(documents))
     } else {
       const { headers } = response
-      console.log(response)
       dispatch(setTotal(Number(headers['content-length'])))
       dispatch(setPhotos(documents));
     }

@@ -2,17 +2,18 @@ import './styles.scss'
 import React, { useState, useEffect, useContext, Fragment } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import { Button } from 'reactstrap'
+import { Button } from 'react-bootstrap'
 import { AppContext } from '../../store/context'
-import { loadPhotos, setPage, setLimit, setLoadMore } from '../../store/actions'
+import { loadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore } from '../../store/actions'
 import Loading from '../Loading'
 import Photo from '../Photo'
+import DeleteModal from '../DeleteModal'
 
 function Photos() {
-  let checkedPhotos = {} as any
-  const { total, page, isLoadMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
+  const { total, deleted, deleting, page, isLoadMore, loadingMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
   const [deleteMode, setDeleteMode] = useState(false)
-  const [deletePhotos] = useState(checkedPhotos)
+  const [checkedPhotos, setCheckedPhotos] = useState({}) as any
+  const [deletePhotos, setDeletePhotos] =  useState({}) as any
   const [count, setCount] = useState(0)
   const handleSelect = (e: any) => {
     dispatch(setLimit(e.target.value))
@@ -22,24 +23,52 @@ function Photos() {
     loadPhotos({ page, limit, dispatch, isLoadMore })
   }, [page, limit])
 
+  useEffect(() => {
+    if (deleted) {
+      setDeleteMode(false)
+      setCheckedPhotos({})
+      setDeletePhotos({})
+      dispatch(setDeleted(false))
+    }
+  },[deleted])
+
   const checkPhoto = (payload: any) => {
     const { photo, checked } = payload
-    deletePhotos[photo.id] = checked
+    checkedPhotos[photo.id] = checked
     if (!checked) {
-      delete deletePhotos[photo.id]
+      delete checkedPhotos[photo.id]
     }
-    if (Object.keys(deletePhotos).length > 0) {
+    if (Object.keys(checkedPhotos).length > 0) {
       setDeleteMode(true)
     } else {
       setDeleteMode(false)
     }
-    setCount(Object.keys(deletePhotos).length)
+    if (!deletePhotos[photo.album]) {
+      if (checked) {
+        deletePhotos[photo.album] = [photo.name]
+      }
+    } else {
+      if (checked) {
+        deletePhotos[photo.album].push(photo.name)
+      }
+    }
+    if (!checked) {
+      deletePhotos[photo.album] = deletePhotos[photo.album].filter((el: any) => el !== photo.name)
+      if (!deletePhotos[photo.album].length) {
+        delete deletePhotos[photo.album]
+      }
+    }
+    setCount(Object.keys(checkedPhotos).length)
   }
 
   const loadMorePhotos = () => {
     const currentPage = page + 1
     dispatch(setPage(currentPage))
     dispatch(setLoadMore(true))
+  }
+
+  const handleDeletePhotos = () => {
+    submitDeletePhotos({ checkedPhotos, list: deletePhotos, dispatch })
   }
 
   return (
@@ -50,8 +79,8 @@ function Photos() {
         </div>
         <div className="options">
           <div className="limit">
-            {Object.keys(deletePhotos).length > 0 && (
-              <div className="delete-photo-button cursor-pointer">
+            {Object.keys(checkedPhotos).length > 0 && (
+              <div onClick={handleDeletePhotos} className="delete-photo-button cursor-pointer">
                <FontAwesomeIcon className="cursor-pointer" icon={faTrash} />
                <span>{"Delete " + (count === 1 ? 'photo' : count + ' photos') }</span>
              </div>
@@ -70,7 +99,7 @@ function Photos() {
           <Photo
             key={photo.id}
             photo={photo}
-            deletePhotos={deletePhotos}
+            deletePhotos={checkedPhotos}
             deleteMode={deleteMode}
             checkPhoto={checkPhoto}/>
         )}
@@ -78,9 +107,11 @@ function Photos() {
       )}
       {!loadingPhotos && photos && total && photos.length < total &&
         <div className="text-center load-more">
-          <Button onClick={loadMorePhotos} type="button" color="primary">Load More</Button>
+          {loadingMore && <Loading />}
+          {!loadingMore &&<Button onClick={loadMorePhotos} type="button" color="primary">Load More</Button>}
         </div>
       }
+      {deleting && <DeleteModal isOpen={true} />}
     </Fragment>
   )
 }

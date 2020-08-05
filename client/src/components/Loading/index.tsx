@@ -1,9 +1,9 @@
 import React from 'react'
-import { Spinner } from 'reactstrap'
+import { Spinner } from 'react-bootstrap'
 
 function Loading() {
   return (
-    <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" />
+    <Spinner animation="grow" />
   )
 }
 
