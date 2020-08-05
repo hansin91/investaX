@@ -12,7 +12,8 @@ import {
   SET_DELETING,
   DELETE_PHOTOS_SUCCESS,
   SET_UPLOADING,
-  SET_UPLOADED
+  SET_UPLOADED,
+  SET_MORE_DATA
 } from './types'
 import axios from 'axios'
 
@@ -83,6 +84,11 @@ export const setUploading = (value: boolean) => ({
 
 export const setUploaded = (value: boolean) => ({
   type: SET_UPLOADED,
+  payload: value
+})
+
+export const setMoreData = (value: boolean) => ({
+  type: SET_MORE_DATA,
   payload: value
 })
 

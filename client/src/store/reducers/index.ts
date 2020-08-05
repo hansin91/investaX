@@ -13,6 +13,7 @@ import {
   DELETE_PHOTOS_SUCCESS,
   SET_UPLOADED,
   SET_UPLOADING,
+  SET_MORE_DATA,
 } from '../actions/types'
 
 interface IPhoto {
@@ -57,6 +58,11 @@ export const initialState: IAppState = {
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
+    case SET_MORE_DATA:
+      return {
+        ...state,
+        moreData: action.payload
+      }
     case SET_UPLOADED:
       return {
         ...state,

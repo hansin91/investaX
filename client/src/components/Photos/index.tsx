@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'react-bootstrap'
 import { AppContext } from '../../store/context'
-import { loadPhotos, uploadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore, setUploaded } from '../../store/actions'
+import { loadPhotos, uploadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore, setUploaded, setMoreData } from '../../store/actions'
 import Loading from '../Loading'
 import Photo from '../Photo'
 import DeleteModal from '../DeleteModal'
@@ -21,6 +21,7 @@ function Photos() {
     dispatch(setLimit(e.target.value))
     dispatch(setPage(1))
     dispatch(setLoadMore(false))
+    dispatch(setMoreData(true))
   }
   useEffect(() => {
     loadPhotos({ page, limit, dispatch, isLoadMore })
