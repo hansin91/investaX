@@ -1,4 +1,4 @@
-import { SET_ERROR, SET_LIMIT, SET_SKIP, SET_LOADING_PHOTOS, SET_PHOTOS, SET_TOTAL_PHOTO } from '../actions/types'
+import { SET_ERROR, SET_LIMIT, SET_PAGE, SET_LOADING_PHOTOS, SET_PHOTOS, SET_TOTAL_PHOTO, SET_LOAD_MORE, FETCH_MORE } from '../actions/types'
 
 interface IPhoto {
   id: string
@@ -6,29 +6,37 @@ interface IPhoto {
   name: string
   path: string
   raw: string
-  total: number
 }
 
 export interface IAppState {
   readonly photos: Array<IPhoto>
   readonly error: string
   readonly loadingPhotos: boolean
-  readonly skip: number
+  readonly loadingMore: boolean
+  readonly loadMore: boolean
+  readonly page: number
   readonly limit: number,
-  readonly total: number
+  readonly total: number,
 }
 
 export const initialState: IAppState = {
   photos: [],
   error: '',
   loadingPhotos: false,
-  skip: 0,
+  loadingMore: false,
+  loadMore: false,
+  page: 1,
   limit: 25,
   total: 0
 }
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
+    case SET_LOAD_MORE:
+      return {
+        ...state,
+        loadMore: action.payload
+      }
     case SET_TOTAL_PHOTO:
       return {
         ...state,
@@ -39,15 +47,20 @@ export default (state = initialState, action: any) => {
         ...state,
         limit: action.payload
       }
-    case SET_SKIP:
+    case SET_PAGE:
       return {
         ...state,
-        skip: action.payload
+        page: action.payload
       }
     case SET_PHOTOS:
       return {
         ...state,
         photos: action.payload
+      }
+    case FETCH_MORE:
+      return {
+        ...state,
+        photos: [...state.photos, ...action.payload]
       }
     case SET_ERROR:
       return {

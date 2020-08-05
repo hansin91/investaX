@@ -4,23 +4,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'reactstrap'
 import { AppContext } from '../../store/context'
-import { loadPhotos, setSkip, setLimit } from '../../store/actions'
+import { loadPhotos, setPage, setLimit, setLoadMore } from '../../store/actions'
 import Loading from '../Loading'
 import Photo from '../Photo'
 
 function Photos() {
   let checkedPhotos = {} as any
-  const { total, skip, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
+  const { total, page, isLoadMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
   const [deleteMode, setDeleteMode] = useState(false)
   const [deletePhotos] = useState(checkedPhotos)
   const [count, setCount] = useState(0)
   const handleSelect = (e: any) => {
     dispatch(setLimit(e.target.value))
-    dispatch(setSkip(0))
+    dispatch(setPage(1))
   }
   useEffect(() => {
-    loadPhotos({ skip, limit, dispatch })
-  }, [skip, limit])
+    loadPhotos({ page, limit, dispatch, isLoadMore })
+  }, [page, limit])
 
   const checkPhoto = (payload: any) => {
     const { photo, checked } = payload
@@ -34,6 +34,12 @@ function Photos() {
       setDeleteMode(false)
     }
     setCount(Object.keys(deletePhotos).length)
+  }
+
+  const loadMorePhotos = () => {
+    const currentPage = page + 1
+    dispatch(setPage(currentPage))
+    dispatch(setLoadMore(true))
   }
 
   return (
@@ -72,7 +78,7 @@ function Photos() {
       )}
       {!loadingPhotos && photos && total && photos.length < total &&
         <div className="text-center load-more">
-          <Button type="button" color="primary">Load More</Button>
+          <Button onClick={loadMorePhotos} type="button" color="primary">Load More</Button>
         </div>
       }
     </Fragment>

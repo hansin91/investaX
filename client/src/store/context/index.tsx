@@ -7,9 +7,10 @@ export const AppProvider = ({ children }: any) => {
     photos: state.photos,
     error: state.error,
     loadingPhotos: state.loadingPhotos,
-    skip: state.skip,
+    page: state.page,
     limit: state.limit,
     total: state.total,
+    isLoadMore: state.loadMore,
     dispatch
   }}>
     {children}
