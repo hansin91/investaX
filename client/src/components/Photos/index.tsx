@@ -11,7 +11,7 @@ import DeleteModal from '../DeleteModal'
 import UploadModal from '../UploadModal'
 
 function Photos() {
-  const { total, deleted, uploaded, deleting, page, isLoadMore, loadingMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
+  const { total, moreData, deleted, uploaded, deleting, page, isLoadMore, loadingMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
   const [deleteMode, setDeleteMode] = useState(false)
   const [showUploadModal, setShowUpoadModal] = useState(false)
   const [checkedPhotos, setCheckedPhotos] = useState({}) as any
@@ -135,7 +135,7 @@ function Photos() {
       {!loadingPhotos && photos && total && photos.length < total &&
         <div className="text-center load-more">
           {loadingMore && <Loading />}
-          {!loadingMore &&<Button onClick={loadMorePhotos} type="button" color="primary">Load More</Button>}
+          {!loadingMore && moreData &&<Button onClick={loadMorePhotos} type="button" color="primary">Load More</Button>}
         </div>
       }
       {deleting && <DeleteModal isOpen={true} />}

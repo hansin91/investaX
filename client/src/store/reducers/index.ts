@@ -36,6 +36,7 @@ export interface IAppState {
   readonly deleted: boolean
   readonly uploading: boolean
   readonly uploaded: boolean
+  readonly moreData: boolean
 }
 
 export const initialState: IAppState = {
@@ -50,7 +51,8 @@ export const initialState: IAppState = {
   deleted: false,
   deleting: false,
   uploading: false,
-  uploaded: false
+  uploaded: false,
+  moreData: true
 }
 
 export default (state = initialState, action: any) => {
@@ -114,6 +116,7 @@ export default (state = initialState, action: any) => {
     case FETCH_MORE:
       return {
         ...state,
+        moreData: action.payload.length ? true : false,
         photos: [...state.photos, ...action.payload]
       }
     case SET_ERROR:

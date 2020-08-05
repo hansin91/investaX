@@ -12,6 +12,7 @@ export const AppProvider = ({ children }: any) => {
     deleting: state.deleting,
     uploading: state.uploading,
     uploaded: state.uploaded,
+    moreData: state.moreData,
     page: state.page,
     limit: state.limit,
     total: state.total,
