@@ -20,6 +20,7 @@ function Photos() {
   const handleSelect = (e: any) => {
     dispatch(setLimit(e.target.value))
     dispatch(setPage(1))
+    dispatch(setLoadMore(false))
   }
   useEffect(() => {
     loadPhotos({ page, limit, dispatch, isLoadMore })

@@ -19,7 +19,7 @@ function UploadFile ({ file } :Props) {
     <Fragment>
       {!file && <div></div>}
       {file && <div style={{ width: '100px', height: '100px', marginRight: '20px'}}>
-      <img className="img-responsive w-100" id={"output-" + file.name}></img>
+      <img alt={file.name} className="img-responsive w-100" id={"output-" + file.name}></img>
       </div>}
     </Fragment>
   )
