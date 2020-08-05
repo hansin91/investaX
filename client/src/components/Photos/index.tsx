@@ -35,7 +35,11 @@ function Photos() {
     if (uploaded) {
       dispatch(setUploaded(false))
       dispatch(setLoadingMore(false))
-      reset()
+      if (page !==1) {
+        reset()
+      } else {
+        loadPhotos({ page: 1, limit, dispatch, isLoadMore: false })
+      }
     }
   },[uploaded])
 
