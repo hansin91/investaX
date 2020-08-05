@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'react-bootstrap'
 import { AppContext } from '../../store/context'
-import { loadPhotos, uploadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore } from '../../store/actions'
+import { loadPhotos, uploadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore, setUploaded } from '../../store/actions'
 import Loading from '../Loading'
 import Photo from '../Photo'
 import DeleteModal from '../DeleteModal'
 import UploadModal from '../UploadModal'
 
 function Photos() {
-  const { total, deleted, deleting, page, isLoadMore, loadingMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
+  const { total, deleted, uploaded, deleting, page, isLoadMore, loadingMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
   const [deleteMode, setDeleteMode] = useState(false)
   const [showUploadModal, setShowUpoadModal] = useState(false)
   const [checkedPhotos, setCheckedPhotos] = useState({}) as any
@@ -23,7 +23,10 @@ function Photos() {
   }
   useEffect(() => {
     loadPhotos({ page, limit, dispatch, isLoadMore })
-  }, [page, limit])
+    if (uploaded) {
+      dispatch(setUploaded(false))
+    }
+  }, [page, limit, uploaded])
 
   useEffect(() => {
     if (deleted) {

@@ -41,7 +41,10 @@ function Photo({ deleteMode, deletePhotos, photo, checkPhoto }: Props) {
       onClick={handleCheckPhoto}
       className={"photo" + (deletePhotos[photo.id] ? ' selected' : '' ) }>
       <div style={{ display: show ? 'block' : 'none' }} className="photo-checked">
+        <label className="checkbox-container">
         <input onChange={handleCheck} type="checkbox" checked={checked}/>
+          <span className="checkmark"></span>
+        </label>
       </div>
       <div className="photo-img-container">
         <div className="photo-img-wrapper">

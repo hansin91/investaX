@@ -12,8 +12,7 @@ import {
   SET_DELETING,
   DELETE_PHOTOS_SUCCESS,
   SET_UPLOADING,
-  SET_UPLOADED,
-  UPLOAD_PHOTO_SUCCESS
+  SET_UPLOADED
 } from './types'
 import axios from 'axios'
 
@@ -87,17 +86,10 @@ export const setUploaded = (value: boolean) => ({
   payload: value
 })
 
-export const uploadPhotosSuccess = (photos: any) => ({
-  type: UPLOAD_PHOTO_SUCCESS,
-  payload: photos
-})
-
 export const uploadPhotos = (payload: any, dispatch: any) => {
   dispatch(setUploading(true))
   axios.put(process.env.REACT_APP_BASE_URL+ '/photos', payload)
   .then((response: any) => {
-    const { data: { data } } = response
-    dispatch(uploadPhotosSuccess(data))
     dispatch(setUploaded(true))
   })
   .catch((err: any) => {

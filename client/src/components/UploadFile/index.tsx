@@ -7,7 +7,6 @@ interface Props {
 function UploadFile ({ file } :Props) {
   useEffect(() => {
     const reader = new FileReader();
-    console.log(file)
     if (file) {
       reader.onload = function(){
         const output = document.getElementById('output-'+ file.name) as any

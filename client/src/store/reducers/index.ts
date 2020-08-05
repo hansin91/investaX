@@ -12,7 +12,7 @@ import {
   SET_DELETING,
   DELETE_PHOTOS_SUCCESS,
   SET_UPLOADED,
-  SET_UPLOADING
+  SET_UPLOADING,
 } from '../actions/types'
 
 interface IPhoto {
