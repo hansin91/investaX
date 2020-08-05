@@ -17,18 +17,27 @@ function Photos() {
   const [checkedPhotos, setCheckedPhotos] = useState({}) as any
   const [deletePhotos, setDeletePhotos] =  useState({}) as any
   const [count, setCount] = useState(0)
-  const handleSelect = (e: any) => {
-    dispatch(setLimit(e.target.value))
+
+  const reset = () => {
     dispatch(setPage(1))
     dispatch(setLoadMore(false))
     dispatch(setMoreData(true))
   }
+  const handleSelect = (e: any) => {
+    dispatch(setLimit(e.target.value))
+    reset()
+  }
   useEffect(() => {
     loadPhotos({ page, limit, dispatch, isLoadMore })
+  }, [page, limit])
+
+  useEffect(() => {
     if (uploaded) {
       dispatch(setUploaded(false))
+      reset()
+      loadPhotos({ page, limit, dispatch, isLoadMore })
     }
-  }, [page, limit, uploaded])
+  },[uploaded])
 
   useEffect(() => {
     if (deleted) {
