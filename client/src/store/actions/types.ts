@@ -1,0 +1,6 @@
+export const SET_PHOTOS = 'SET_PHOTOS'
+export const SET_LOADING_PHOTOS = 'SET_LOADING_PHOTOS'
+export const SET_ERROR = 'SET_ERROR'
+export const SET_LIMIT = 'SET_LIMIT'
+export const SET_SKIP = 'SET_SKIP'
+export const SET_TOTAL_PHOTO = 'SET_TOTAL_PHOTO'

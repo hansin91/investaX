@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 15px;
+  margin-top: 15px;
+}
+
+.limit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-photo-button {
+  padding-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  span {
+    white-space: nowrap;
+    padding-left: 5px;
+  }
+  &:hover {
+    text-decoration: none;
+  }
+
+  .text {
+    padding-left: 0.5rem;
+  }
+}
+
+.load-more {
+  margin: 1rem;
+}
