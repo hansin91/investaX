@@ -1,4 +1,20 @@
-import { SET_PAGE, SET_PHOTOS, SET_LIMIT, SET_LOADING_PHOTOS, SET_ERROR, SET_TOTAL_PHOTO, SET_LOADING_MORE, FETCH_MORE, SET_LOAD_MORE, SET_DELETED, SET_DELETING, DELETE_PHOTOS_SUCCESS } from './types'
+import {
+  SET_PAGE,
+  SET_PHOTOS,
+  SET_LIMIT,
+  SET_LOADING_PHOTOS,
+  SET_ERROR,
+  SET_TOTAL_PHOTO,
+  SET_LOADING_MORE,
+  FETCH_MORE,
+  SET_LOAD_MORE,
+  SET_DELETED,
+  SET_DELETING,
+  DELETE_PHOTOS_SUCCESS,
+  SET_UPLOADING,
+  SET_UPLOADED,
+  UPLOAD_PHOTO_SUCCESS
+} from './types'
 import axios from 'axios'
 
 export const setPhotos = (photos: Array<any>) => ({
@@ -60,6 +76,37 @@ export const deletePhotosSucces = (photos: any) => ({
   type: DELETE_PHOTOS_SUCCESS,
   payload: photos
 })
+
+export const setUploading = (value: boolean) => ({
+  type: SET_UPLOADING,
+  payload: value
+})
+
+export const setUploaded = (value: boolean) => ({
+  type: SET_UPLOADED,
+  payload: value
+})
+
+export const uploadPhotosSuccess = (photos: any) => ({
+  type: UPLOAD_PHOTO_SUCCESS,
+  payload: photos
+})
+
+export const uploadPhotos = (payload: any, dispatch: any) => {
+  dispatch(setUploading(true))
+  axios.put(process.env.REACT_APP_BASE_URL+ '/photos', payload)
+  .then((response: any) => {
+    const { data: { data } } = response
+    dispatch(uploadPhotosSuccess(data))
+    dispatch(setUploaded(true))
+  })
+  .catch((err: any) => {
+    const { response: { data: { message } } } = err
+    dispatch(setErrors(message))
+    dispatch(setUploaded(false))
+  })
+  .finally(() => dispatch(setUploading(false)) )
+}
 
 export const deletePhotos = (payload: any) => {
   const { list, dispatch, checkedPhotos } = payload

@@ -1,17 +1,19 @@
 import './styles.scss'
 import React, { useState, useEffect, useContext, Fragment } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'react-bootstrap'
 import { AppContext } from '../../store/context'
-import { loadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore } from '../../store/actions'
+import { loadPhotos, uploadPhotos, setDeleted, deletePhotos as submitDeletePhotos, setPage, setLimit, setLoadMore } from '../../store/actions'
 import Loading from '../Loading'
 import Photo from '../Photo'
 import DeleteModal from '../DeleteModal'
+import UploadModal from '../UploadModal'
 
 function Photos() {
   const { total, deleted, deleting, page, isLoadMore, loadingMore, photos, limit, loadingPhotos, dispatch } = useContext(AppContext)
   const [deleteMode, setDeleteMode] = useState(false)
+  const [showUploadModal, setShowUpoadModal] = useState(false)
   const [checkedPhotos, setCheckedPhotos] = useState({}) as any
   const [deletePhotos, setDeletePhotos] =  useState({}) as any
   const [count, setCount] = useState(0)
@@ -71,6 +73,24 @@ function Photos() {
     submitDeletePhotos({ checkedPhotos, list: deletePhotos, dispatch })
   }
 
+  const openUploadModal = () => {
+    setShowUpoadModal(true)
+  }
+
+  const closeUploadModal = () => {
+    setShowUpoadModal(false)
+  }
+
+  const upload = (payload: any) => {
+    const { files, album } = payload
+    const formData = new FormData()
+    formData.append('album', album)
+    for (const file of files) {
+      formData.append('documents', file)
+    }
+    uploadPhotos(formData, dispatch)
+  }
+
   return (
     <Fragment>
       <div className="header">
@@ -85,6 +105,10 @@ function Photos() {
                <span>{"Delete " + (count === 1 ? 'photo' : count + ' photos') }</span>
              </div>
             )}
+            <div onClick={openUploadModal} className="upload-photos mr-3 cursor-pointer">
+              <FontAwesomeIcon className="cursor-pointer mr-2" icon={faCloudUploadAlt} />
+              <span>Upload</span>
+            </div>
             <select onChange={handleSelect} className="form-control">
               <option value="25">25</option>
               <option value="50">50</option>
@@ -112,6 +136,7 @@ function Photos() {
         </div>
       }
       {deleting && <DeleteModal isOpen={true} />}
+      <UploadModal upload={upload} show={showUploadModal} handleClose={closeUploadModal} />
     </Fragment>
   )
 }

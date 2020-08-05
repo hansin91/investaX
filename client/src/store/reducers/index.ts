@@ -10,7 +10,9 @@ import {
   FETCH_MORE,
   SET_DELETED,
   SET_DELETING,
-  DELETE_PHOTOS_SUCCESS
+  DELETE_PHOTOS_SUCCESS,
+  SET_UPLOADED,
+  SET_UPLOADING
 } from '../actions/types'
 
 interface IPhoto {
@@ -28,10 +30,12 @@ export interface IAppState {
   readonly loadingMore: boolean
   readonly loadMore: boolean
   readonly page: number
-  readonly limit: number,
-  readonly total: number,
-  readonly deleting: boolean,
+  readonly limit: number
+  readonly total: number
+  readonly deleting: boolean
   readonly deleted: boolean
+  readonly uploading: boolean
+  readonly uploaded: boolean
 }
 
 export const initialState: IAppState = {
@@ -44,11 +48,23 @@ export const initialState: IAppState = {
   limit: 25,
   total: 0,
   deleted: false,
-  deleting: false
+  deleting: false,
+  uploading: false,
+  uploaded: false
 }
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
+    case SET_UPLOADED:
+      return {
+        ...state,
+        uploaded: action.payload
+      }
+    case SET_UPLOADING:
+      return {
+        ...state,
+        uploading: action.payload
+      }
     case DELETE_PHOTOS_SUCCESS:
       const newPhotoList = [...state.photos].filter((photo) => !action.payload[photo.id])
       return {

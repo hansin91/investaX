@@ -10,6 +10,8 @@ export const AppProvider = ({ children }: any) => {
     loadingMore: state.loadingMore,
     deleted: state.deleted,
     deleting: state.deleting,
+    uploading: state.uploading,
+    uploaded: state.uploaded,
     page: state.page,
     limit: state.limit,
     total: state.total,
